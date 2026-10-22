@@ -1,17 +1,152 @@
-# module_control_1
+#  Модульний контроль 1: Вступ до мобільної розробки
 
-A new Flutter project.
+| | |
+|---|---|
+| **Дисципліна** | Програмування для мобільних платформ |
+| **Змістовий модуль** | 1: Вступ до мобільної розробки (Теми 1–8) |
+| **Виконав** | [Руденко Олексій], група [Ік-42] |
+| **Технології** | Dart, Flutter |
 
-## Getting Started
+Репозиторій містить код практичної частини (Частина 2: 4 завдання × 5 балів).
+Відповіді на тестові питання (Частина 1) наведено у файлі роботи (PDF/DOCX).
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+##  Структура репозиторію
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```
+module_control_1/
+├── lib/
+│   ├── task1_library.dart        # Завдання 1: класи та колекції (Dart)
+│   ├── task2_rating_badge.dart   # Завдання 2: віджет RatingBadge (Flutter)
+│   ├── task3_counter.dart        # Завдання 3: два екрани, setState, Navigator
+│   └── task4_weather.dart        # Завдання 4: Future та Stream (Dart)
+├── test/
+│   ├── task1_test.dart
+│   ├── task2_test.dart
+│   ├── task3_test.dart
+│   └── task4_test.dart
+├── pubspec.yaml
+└── README.md
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> `lib/main.dart` — шаблонний файл, який створює `flutter create`.
+> У завданнях він не використовується: кожне завдання запускається окремо через `-t`.
+
+---
+
+##  Вимоги до середовища
+
+- Flutter SDK (перевірка встановлення: `flutter doctor`)
+- Dart SDK (входить до складу Flutter)
+- Емулятор, фізичний пристрій або браузер Chrome для Flutter-завдань
+
+##  Встановлення
+
+```bash
+git clone https://github.com/<логін>/module-control-1.git
+cd module-control-1
+flutter pub get
+```
+
+---
+
+##  Завдання
+
+### Завдання 1. Основи Dart: класи та колекції
+
+Ієрархія класів для моделювання бібліотеки:
+
+- `LibraryItem` — абстрактний клас (`title`, `year`, метод `describe()`)
+- `Book` — додає `author`, формат опису: `Назва (рік) — автор`
+- `Magazine` — додає `issueNumber`, формат опису: `Назва (рік), випуск N`
+- `Library` — зберігає список елементів:
+  - `addItem()` — додає елемент
+  - `findByYear()` — фільтрує через `.where()`
+  - `allDescriptions` — формує описи через `.map()`
+  - `findOldest()` — повертає найстаріший елемент або `null`, якщо бібліотека порожня
+
+**Запуск:**
+
+```bash
+dart run lib/task1_library.dart
+```
+
+### Завдання 2. Власний Stateless-віджет `RatingBadge`
+
+Багаторазовий віджет: зірка, рейтинг із 1 знаком після коми та необов'язковий підпис.
+
+- Колір зірки визначає один метод `RatingBadge.colorFor`:
+  - `rating >= 4.0` — зелений
+  - `rating >= 2.5` — оранжевий
+  - інакше — червоний
+- Конструктор `const`, поля `final`
+- Значення поза діапазоном 0.0–5.0 та `NaN` обробляються
+
+**Запуск:**
+
+```bash
+flutter run -t lib/task2_rating_badge.dart
+```
+
+### Завдання 3. State Management та навігація
+
+Застосунок із двома екранами:
+
+- `HomeScreen` (`StatefulWidget`) — лічильник, кнопка «+1» (через `setState()`) і кнопка «Детальніше»
+- `DetailScreen` — отримує значення лічильника **лише через конструктор**, показує його; кнопка «Назад» викликає `Navigator.pop()`
+- Після повернення на `HomeScreen` лічильник не скидається
+
+**Запуск:**
+
+```bash
+flutter run -t lib/task3_counter.dart
+```
+
+### Завдання 4. Асинхронний код
+
+Клас `WeatherService`:
+
+- `fetchCurrentWeather(city)` — повертає `Future<Map<String, dynamic>>` із затримкою 1–2 с; для порожнього міста кидає `ArgumentError('Місто не вказано')`
+- `temperatureUpdates({times})` — генератор `async*`, який щосекунди видає випадкову температуру й завершується після `times` значень
+
+У `main()` показано використання через `async/await` + `try-catch`, а також через `await for` і `.listen()`.
+
+**Запуск:**
+
+```bash
+dart run lib/task4_weather.dart
+```
+
+---
+
+##  Тести
+
+Усі тести:
+
+```bash
+flutter test
+```
+
+Тест окремого завдання (наприклад, першого):
+
+```bash
+flutter test test/task1_test.dart
+```
+
+##  Враховані крайні випадки
+
+| Завдання | Крайній випадок |
+|---|---|
+| 1 | Порожня бібліотека: `findOldest()` повертає `null`; рік без елементів: `findByYear` повертає `[]` |
+| 2 | `label` дорівнює `null` або порожній рядок; рейтинг < 0, > 5, `NaN`; межі 4.0 та 2.5 |
+| 3 | Лічильник зберігається після `Navigator.pop()` |
+| 4 | Порожнє місто або лише пробіли; `times: 0` дає порожній Stream |
+
+---
+
+##  Використання ШІ
+
+Під час виконання роботи використовувався ШІ-інструмент **Claude (Anthropic)**.
+Повний опис (мета, промпти, використані фрагменти та власний внесок) наведено
+в розділі «Використання ШІ» у файлі роботи (PDF/DOCX).
